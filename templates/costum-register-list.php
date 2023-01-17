@@ -23,13 +23,13 @@
   <?php
   foreach ($register_lists as $list) {
     _e('<div class="card" style="width: 18rem;">
-    <div class="card-header">' . $list->firstname . ' ' . $list->lastname . '</div>
+    <div class="card-header">' . esc_html($list->firstname ). ' ' . esc_html($list->lastname). '</div>
     <div class="card-body">
       <h6 class="card-title">Review :-</h6>
-      <p>' . $list->review . '</p>
-      <p>Rating :- ' . $list->rating . '</p>
+      <p>' .esc_html($list->review). '</p>
+      <p>Rating :- ' .esc_html($list->rating).'</p>
     </div>
-    <div class="card-footer">' . $list->email . '</div>
+    <div class="card-footer">' .esc_html($list->email).'</div>
   </div>');
   }
   ?>

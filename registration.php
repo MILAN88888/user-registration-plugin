@@ -100,7 +100,7 @@ class registration
     {
         $to = $email;
         $subject = "Successful Registration";
-        $message = "Congratulation!! Your email $email is successfully registerd!!";
+        $message = "Congratulation!! Your email " . esc_html($email) . " is successfully registerd!!";
         wp_mail($to, $subject, $message);
     }
 
@@ -193,7 +193,7 @@ class registration
                     $msg = "Registration Successfully !!";
                     do_action('display_message', $msg);
                 } else {
-                    $msg = 'Provided Email ' . $email . ' is already Registered!! </div>';
+                    $msg = 'Provided Email ' . esc_html($email) . ' is already Registered!! </div>';
                     do_action('display_message', $msg);
                 }
             }
@@ -205,9 +205,9 @@ class registration
      */
     function registration_form()
     {
-         // ob_start();
-         include_once('templates/costum-register.php');
-         // return ob_get_clean();
+        // ob_start();
+        include_once('templates/costum-register.php');
+        // return ob_get_clean();
     }
 
     /**
@@ -247,13 +247,13 @@ class registration
         $res = $wpdb->get_results($sql);
         foreach ($res as $list) {
             _e('<div class="card" style="width: 18rem;">
-            <div class="card-header">' . $list->firstname . ' ' . $list->lastname . '</div>
+            <div class="card-header">' . esc_html($list->firstname) . ' ' . esc_html($list->lastname) . '</div>
             <div class="card-body">
               <h6 class="card-title">Review :-</h6>
-              <p>' . $list->review . '</p>
-              <p>Rating :- ' . $list->rating . '</p>
+              <p>' . esc_html($list->review) . '</p>
+              <p>Rating :- ' . esc_html($list->rating) . '</p>
             </div>
-            <div class="card-footer">' . $list->email . '</div>
+            <div class="card-footer">' . esc_html($list->email) . '</div>
           </div>');
         }
         // wp_send_json($res);
@@ -278,13 +278,13 @@ class registration
         $res = $wpdb->get_results($sql);
         foreach ($res as $list) {
             _e('<div class="card" style="width: 18rem;">
-            <div class="card-header">' . $list->firstname . ' ' . $list->lastname . '</div>
+            <div class="card-header">' . esc_html($list->firstname) . ' ' . esc_html($list->lastname) . '</div>
             <div class="card-body">
               <h6 class="card-title">Review :-</h6>
-              <p>' . $list->review . '</p>
-              <p>Rating :- ' . $list->rating . '</p>
+              <p>' . esc_html($list->review) . '</p>
+              <p>Rating :- ' . esc_html($list->rating) . '</p>
             </div>
-            <div class="card-footer">' . $list->email . '</div>
+            <div class="card-footer">' . esc_html($list->email) . '</div>
           </div>');
         }
         // wp_send_json($res);
