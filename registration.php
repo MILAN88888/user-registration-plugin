@@ -34,6 +34,8 @@ class registration
         add_action('wp_ajax_rating_filter', array($this, 'rating_filter'));
         add_action('wp_ajax_latest_filter', array($this, 'latest_filter'));
 
+        add_action('display_message', array($this, 'display_message'), 10, 1);
+
         add_shortcode('registration_form_code', array($this, 'registration_form'));
         add_shortcode('registration_list_code', array($this, 'register_list'));
         add_action('plugin_loaded', array($this, 'registration_plugin_load_text_domain'));
@@ -63,9 +65,9 @@ class registration
         $phpmailer->Port       = '465';
         $phpmailer->SMTPSecure = 'ssl';
         $phpmailer->SMTPAuth   = true;
-        $phpmailer->Username   = '' ;// 
+        $phpmailer->Username   = ''; // 
         $phpmailer->Password   = ''; //app password removed for security reasion
-        $phpmailer->From    = ''; 
+        $phpmailer->From    = '';
     }
 
     /**
@@ -77,6 +79,18 @@ class registration
         return "text/html";
     }
 
+    /**
+     * Function display_message
+     * 
+     * @var $msg is message;
+     * 
+     */
+    function display_message($msg)
+    {
+        _e('<div class="alert alert-success" role="alert">
+        ' . $msg . '
+        </div>');
+    }
     /**
      * Function fo sendmail to registered user
      * 
@@ -130,7 +144,7 @@ class registration
      * Function to render Form template.
      * 
      */
-    function registration_form()
+    function registration_form_data()
     {
         if (isset($_POST['register_nonce_field']) || wp_verify_nonce($_POST['register_nonce_field'], 'register_nonce_action')) {
             if (isset($_POST['register'])) {
@@ -139,7 +153,15 @@ class registration
                 $table = $table_prefix . 'registers';
 
                 //Accessing data and sanitizing
-                $email = sanitize_email($_POST['email']);
+                if (is_email(sanitize_email($_POST['email']))) {  // if it is valid email give the email otherwise false.
+
+                    $email = sanitize_email($_POST['email']);
+                } else {
+                    $msg = "Please Enter valid Email";
+                    do_action('display_message', $msg);
+                    $email = "";
+                }
+
 
                 //applying filter to get user name from email
                 $userName = apply_filters('get_user_name_filter', $email);
@@ -168,19 +190,24 @@ class registration
                     // costume action hook to send mail
                     do_action('send_mail_action', $email);
 
-                    _e('<div class="alert alert-success" role="alert">
-            Registration Successfully !!
-            </div>');
+                    $msg = "Registration Successfully !!";
+                    do_action('display_message', $msg);
                 } else {
-                    _e('<div class="alert alert-success" role="alert">
-            Provided Email ' . $email . ' is already Registered!!
-            </div>');
+                    $msg = 'Provided Email ' . $email . ' is already Registered!! </div>';
+                    do_action('display_message', $msg);
                 }
             }
         }
-        // ob_start();
-        include_once('templates/costum-register.php');
-        // return ob_get_clean();  
+    }
+    /**
+     * Fuction registration form
+     * 
+     */
+    function registration_form()
+    {
+         // ob_start();
+         include_once('templates/costum-register.php');
+         // return ob_get_clean();
     }
 
     /**
